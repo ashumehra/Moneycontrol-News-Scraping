@@ -48,29 +48,29 @@ class MoneyControl:
 
     def content(self,file_name):
         data = pd.read_csv(file_name,names = ['title','url','date','time'],encoding='latin1')
-        data['file-name'] = ""
+        data['content'] = ""
         for i in range(len(data['url'])):
             news_url = data['url'][i]
             # print(data['url'][i])
             news_content = requests.get(news_url)
             page = BeautifulSoup(news_content.content,'html.parser')
             pro_memebership_count=0
-            file_name = "article"+str(i)+".txt"
-            with open(file_name,'a') as f:
-                try:
-                    article = page.find(id='article-main')
-                    cont = article.find_all('p')
-                    for para in cont:
-                        f.write(para.text)
-                        # print(para.text, sep="\n\n\n")
-                    data['file-name'][i]=file_name
-                    print(file_name)
-                except:
-                    print("PRO MEMBERSHIP")
-                    pro_memebership_count+=1
-                    pass
-            f.close()
-        data.to_csv('News-Meta-data2.csv',index=True,header=True)
+            try:
+                article = page.find(id='article-main')
+                cont = article.find_all('p')
+                content = []
+                for para in cont:
+                    # print(para.text, sep="\n\n\n")
+                    content.append(para.text)
+                content = "".join(content)
+                data['content'][i]=content
+                # print(content)
+                print("Extracting...",news_url)
+            except:
+                print("PRO MEMBERSHIP")
+                pro_memebership_count+=1
+                pass
+        data.to_csv(self.comp_id+'-MoneyControl-data.csv',index=True,header=True)
 
     
 

@@ -24,5 +24,5 @@ Get headline and url link of content
 ```
 Get the content of each article and store it in separate file
 ```
->> obj.content("file-name.csv)
+>> obj.content("file-name.csv")
 ```
