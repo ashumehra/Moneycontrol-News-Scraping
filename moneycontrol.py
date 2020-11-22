@@ -32,8 +32,8 @@ class MoneyControl:
                         text_string = timestamp.contents[0]
                         clean_text = unicodedata.normalize("NFKD",text_string)
                         timeanddate = clean_text.split('|')
-                        time = timeanddate[0]
-                        date = timeanddate[1]
+                        time = timeanddate[0].strip()
+                        date = timeanddate[1].strip()
                         news_url = 'https://www.moneycontrol.com'+link_tag['href']
                         # print(title.string,news_url, end='\n'*2, sep='\n'*2)
                         print(time,date)
