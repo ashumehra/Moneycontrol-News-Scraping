@@ -56,7 +56,9 @@ class MoneyControl:
             page = BeautifulSoup(news_content.content,'html.parser')
             pro_memebership_count=0
             try:
-                article = page.find(id='article-main')
+                article = page.find(class_='content_wrapper arti-flow')
+                # if article is None:
+                #     article = page.find(id='article-main')
                 cont = article.find_all('p')
                 content = []
                 for para in cont:
@@ -66,12 +68,29 @@ class MoneyControl:
                 data['content'][i]=content
                 # print(content)
                 print("Extracting...",news_url)
-            except:
-                print("PRO MEMBERSHIP")
+            except Exception as e:
+                print("PRO MEMBERSHIP", e)
                 pro_memebership_count+=1
                 pass
         data.to_csv(self.comp_id+'-MoneyControl-data.csv',index=True,header=True)
 
-    
+    def economic(self,setpageno=10,file_name='Economic-MoneyControl.csv'):
+        page_no = 1
+        while(page_no<=setPageNo):
+            url = "https://www.moneycontrol.com/news/business/economy/page-"+str(page_no)+"/"
+            req = requests.get(url)
+            soup = BeautifulSoup(req.content,'html.parser')
+            all_FL = soup.find('div', id="left")
+            lists = all_FL.find_all('li',class_="clearfix")
+            with open(file_name,mode='a',newline='') as f:
+                writer = csv.writer(f)
+                for ele in lists:
+                    title = ele.find('h2')
+                    time  = ele.find('span').text.strip()
+                    dateobj = datetime.datetime.strptime(time, '%B %d, %Y %I:%M %p IST')
+                    link = title.find('a')['href']
+                    writer.writerow([title.text,link,dateobj.date(),dateobj.time()])
+                    # print(link)
+            page_no+=1
 
 
